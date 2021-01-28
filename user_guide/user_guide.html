@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Gezr</title>
+    <link rel="stylesheet" href="../scholarly_report/css/scholarly.min.css">
+  </head>
+  <body prefix="schema: http://schema.org">
+    <header>
+      <h1>GEZR - User Guide</h1>
+    </header>
+    <div role="contentinfo">
+      <dl>
+        <dt>Authors</dt>
+        <dd vocab="http://schema.org/" typeof="Person" property="author">
+          <span property="name">Baisan Razvan</span>
+          (<a href="mailto:razvanb135@gmail.com" property="email" typeof="URL">razvanb135@gmail.com</a>)
+        </dd>
+        <dd vocab="http://schema.org/" typeof="Person" property="author">
+          <span property="name">Florean Oana-Lavinia</span>
+          (<a href="mailto:florean.lavinia@gmail.com" property="email" typeof="URL">florean.lavinia@gmail.com</a>)
+        </dd>
+        <dd vocab="http://schema.org/" typeof="Person" property="author">
+          <span property="name">Gafitescu Petru-Marian</span>
+          (<a href="mailto:pmgafitescu@gmail.com" property="email" typeof="URL">pmgafitescu@gmail.com</a>)
+        </dd>
+      </dl>
+    </div>
+    <section typeof="sa:Abstract" id="abstract" role="doc-abstract">
+      <h2>Abstract</h2>
+      <p property="text">
+        Gezr is a web application that has the purpose of creating a small structure out of Webcam-captured video-streams,
+        by detecting, classifying and comparing hand/arm gestures of users, providing also information about rules resulted
+        from the input gesture.
+        Simple users will conect to the application with camera on and they could see, by request, gestures data resulted until that point and,
+        eventually, they can start a quiz game.
+      </p>
+    </section>
+    <section id="introduction" role="doc-introduction">
+      <h2>Introduction</h2>
+      <p property="text">
+        This guide shows how the user interacts with GEZR application, providing details about the overall design of
+        the application and the actions that are exposed to the end user.
+      </p>
+    </section>
+
+    <section id="overview">
+      <h2>Overview</h2>
+      <p property="text">
+        When accessing the application, the user is shown dirrectly the main page that contains the Webcam streams already processed, showing
+        the landmarks of the hand, when one or many are found in video, and the gesture found by the application on the first hand.
+        Once the main page is accessed, the gestures found are also registered by the application for future references.
+        At this moment, the user can start a quiz game, where he could answer with true or false only though gestures, or
+        he could cause a rule, like opening a new tab in the current browser or stop recording data. All the registered gestures
+        can also be seen in the statistics tab. 
+      </p>
+      <p>
+        <figure typeof="schema:ImageObject">
+          <img src="img/overview.png" alt="Overview of the app" property="contentUrl" width="607" height="450">
+        </figure>
+      </p>
+
+      <section id="menu">
+        <h3>Menu</h3>
+        <p>
+          The menu on the top provides actions for the user. Therefore, a user can get statistics of the gestures
+          registered by now and start a quiz game, but also to see informations about the application.
+        </p>
+
+        <p>
+          <figure typeof="schema:ImageObject">
+            <img src="img/menu.png" alt="Menu" property="contentUrl" width="300" height="130">
+          </figure>
+        </p>
+
+      </section>
+
+      <section id="stream">
+        <h3>Realtime gestures recognition</h3>
+        <p>
+          In the middle of the page, the Webcam stream will be shown, with realtime hand gestures recognition. The gestures that are
+          supported are Wave, Fist, Thumbs up, Thumbs down, Peace, Paper and counting from 1 to 5.
+          <p>
+            <figure typeof="schema:ImageObject">
+              <img src="img/gesture_realtime.png" alt="Realtime found gesture" property="contentUrl" width="807" height="700">
+            </figure>
+          </p>
+        </p>
+      </section>
+
+      <section id="info">
+        <h3>Information popup</h3>
+        <p>
+          After clicking on the info button from the menu, a box that contains information about the app will appear.
+        </p>
+        <p>
+          <figure typeof="schema:ImageObject">
+            <img src="img/information.png" alt="Information box" property="contentUrl" width="507" height="500">
+          </figure>
+        </p>
+      </section>
+
+      <section id="statistics">
+        <h3>Statistics</h3>
+        <p>
+          This section will open a page containing statistics about the gestures registered until now, not considering the time when 
+          data recording was closed
+        </p>
+        <p>
+          <figure typeof="schema:ImageObject">
+            <img src="img/statistics.jpeg" alt="Statistics" property="contentUrl" width="607" height="500">
+          </figure>
+        </p>
+      </section>
+
+      <section id="question">
+        <h3>Questions</h3>
+        <p>
+          The questions are such that they can be answered only true or false, and for this the user will have 10 seconds 
+          per question to show to the camera thumbs up (for at least 5 seconds), if he considers the statement to be true, and thumbs down if who considers it false.
+          Before the game starts a popup will appear to specify the constraints of the game. After confirmation, a box corresponding to each 
+          question will appear under the camera. After answering the questions, a new popup will appear to specify for each question whether 
+          it was answered correctly, by coloring the answer it in blue, or incorrectly, in red.
+
+          Starting a quiz:
+          <p>
+            <figure typeof="schema:ImageObject">
+              <img src="img/start_quiz.png" alt="Start quiz" property="contentUrl" width="457" height="400">
+            </figure>
+          </p>
+
+          Answering a question:
+          <p>
+            <figure typeof="schema:ImageObject">
+              <img src="img/answer_q.png" alt="Answer given question" property="contentUrl" width="607" height="700">
+            </figure>
+          </p>
+
+          Checking answers:
+          <p>
+            <figure typeof="schema:ImageObject">
+              <img src="img/answers.png" alt="Check answers" property="contentUrl" width="507" height="500">
+            </figure>
+          </p>
+        </p>
+      </section>
+      
+    </section>
+
+    <section id="rules">
+      <h2>Rules</h2>
+      <p property="text">
+        Certain gestures made to the camera for a certain time can cause a certain action.
+      </p>
+      <section id="close_camera">
+        <h3>Stop recording data</h3>
+        <p>
+          If the user wants to temporarily or permanently stop storing data about gestures made to the camera, it is necessary to wave to the camera 
+          for more than 5 seconds. At this point a popup will appear and, with the user's consent, the recording will be stopped. During this time,
+          question-type games will not be active, as well with other rules.
+          Still, during this period the gestures can still be viewed realtime in the camera.
+
+          <p>
+            <figure typeof="schema:ImageObject">
+              <img src="img/stop.png" alt="Ask stop recording" property="contentUrl" width="407" height="300">
+            </figure>
+          </p>
+          A button that allows you to resume recording will appear under the camera box.
+          <p>
+            <figure typeof="schema:ImageObject">
+              <img src="img/start.png" alt="Start recording" property="contentUrl" width="207" height="100">
+            </figure>
+          </p>
+        </p>
+      </section>
+      <section id="open_browser">
+        <h3>Macro: open new tab</h3>
+        <p>
+          A macro introduced by the application is to open a new tab in the current browser by using the gesture 5 for more than 5 seconds.
+        </p>
+      </section>
+    </section>
+
+
+  </body>
+</html>

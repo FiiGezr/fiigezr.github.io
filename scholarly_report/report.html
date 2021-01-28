@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Gezr</title>
+    <link rel="stylesheet" href="css/scholarly.min.css">
+  </head>
+  <body prefix="schema: http://schema.org">
+    <header>
+      <h1>GEZR</h1>
+    </header>
+    <div role="contentinfo">
+      <dl>
+        <dt>Authors</dt>
+        <dd vocab="http://schema.org/" typeof="Person" property="author">
+          <span property="name">Baisan Razvan</span>
+          (<a href="mailto:razvanb135@gmail.com" property="email" typeof="URL">razvanb135@gmail.com</a>)
+        </dd>
+        <dd vocab="http://schema.org/" typeof="Person" property="author">
+          <span property="name">Florean Oana-Lavinia</span>
+          (<a href="mailto:florean.lavinia@gmail.com" property="email" typeof="URL">florean.lavinia@gmail.com</a>)
+        </dd>
+        <dd vocab="http://schema.org/" typeof="Person" property="author">
+          <span property="name">Gafitescu Petru-Marian</span>
+          (<a href="mailto:pmgafitescu@gmail.com" property="email" typeof="URL">pmgafitescu@gmail.com</a>)
+        </dd>
+        <dt>Bugs &amp; Feedback</dt>
+        <dd>
+          <a href="https://github.com/FiiGezr">Issues and PRs welcome!</a>
+        </dd>
+        <dt>Stages of project development</dt>
+        <dd>
+          The stages and the tasks done by each member can be seen on <a href="https://fiigezr.github.io/">github</a>.
+        </dd>
+      </dl>
+    </div>
+    <section typeof="sa:Abstract" id="abstract" role="doc-abstract">
+      <h2>Abstract</h2>
+      <p property="text">
+        Gezr is a web application that has the purpose of creating a small structure out of Webcam-captured video-streams,
+        by detecting, classifying and comparing hand/arm gestures of users, providing also information about rules resulted
+        from the input gesture. For this analysis, the data will be modeled using a Resource Description Framework (RDF) schema.
+        Simple users will conect to the application with camera on and they could see, by request, gestures data resulted until that point and,
+        eventually, they can start a quiz game.
+      </p>
+    </section>
+    <section id="introduction" role="doc-introduction">
+      <h2>Introduction</h2>
+      <p property="text">
+        This report focuses on presenting the considerations about the 
+        internal data structures/models to be used and the external APIs managed by
+        the application. It starts by describing the main used classes, presentented
+        through a RDF Data Management, and the graphical
+        representation of how these interact within the application. This is followed
+        by a description of external libraries and models used in the process of gesture
+        analysis.
+      </p>
+    </section>
+
+    <!-- <section id="progress">
+      <h2>Project progress</h2>
+      <p property="text">
+        
+      </p>
+    </section> -->
+
+    <section id="internal">
+      <h2>Internal data structure and models</h2>
+      <p property="text">
+        For representing the internal data of the application and the linking structure, a Resource Description Framework (RDF) was created.
+        The main classes are:
+        <ul>
+          <li>User: general information about the person that is using the webcam and the observed characteristics.</li>
+          <li>Gesture: resulted gestures after detecting, analysing and classifying video-streams. </li>
+          <li>Rule: defined actions to be considered after analysing a Gesture. </li>
+        </ul>
+        Since MediaPipe was used for extracting metadata about the analysed hand, other strutures were created for handling such data.
+        In the end we didn't used this in out application, but is still kept as art of the ontology. The main classes are:
+        <ul>
+          <li>Hand: the base class.</li>
+          <li>Finger: superclass for IndexFinger, MiddleFinger, RingFinger, PinkyFinger, Thumb. </li>
+          <li>Point: 21 common points of Finger class, like PIP, TIP, DIP, CMC, IP, represented by a x and a y. </li>
+        </ul>
+      </p>
+      <p>
+
+      </p>
+      <section id="rdf">
+        <h3>RDF schema</h3>
+        <p property="text">
+          The following code section provides a short version of our schema, with only one instance of each class Gesture or Rule.
+          Also, for better understandings, a visual representation was added after.
+          <figure typeof="schema:SoftwareSourceCode" resource="#rdf_schema_code"
+                id="rdf_schema_code">
+            <pre><code>
+    &lt;?xml version=&quot;1.0&quot;?&gt;
+    &lt;rdf:RDF xmlns:rdf=&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;
+              xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema#&quot;
+              xmlns:rdfs=&quot;http://www.w3.org/2000/01/rdf-schema#&quot;
+              xmlns:owl=&quot;http://www.w3.org/2002/07/owl#&quot;
+              xml:base=&quot;http://fiigezr.org/fiiGezr.owl&quot;
+              xmlns=&quot;http://fiigezr.org/fiiGezr.owl#&quot;&gt;
+    
+    &lt;owl:Ontology rdf:about=&quot;http://fiigezr.org/fiiGezr.owl&quot;/&gt;
+    
+    &lt;owl:ObjectProperty rdf:about=&quot;#is_caused_by&quot;&gt;
+      &lt;rdfs:domain rdf:resource=&quot;#Rule&quot;/&gt;
+      &lt;rdfs:range rdf:resource=&quot;#Gesture&quot;/&gt;
+      &lt;owl:inverseOf rdf:resource=&quot;#causes_rule&quot;/&gt;
+    &lt;/owl:ObjectProperty&gt;
+    
+    &lt;owl:ObjectProperty rdf:about=&quot;#causes_rule&quot;&gt;
+      &lt;rdfs:domain rdf:resource=&quot;#Gesture&quot;/&gt;
+      &lt;rdfs:range rdf:resource=&quot;#Rule&quot;/&gt;
+      &lt;owl:inverseOf rdf:resource=&quot;#is_caused_by&quot;/&gt;
+    &lt;/owl:ObjectProperty&gt;
+    
+    &lt;owl:ObjectProperty rdf:about=&quot;#makes_gesture&quot;&gt;
+      &lt;rdfs:domain rdf:resource=&quot;#User&quot;/&gt;
+      &lt;rdfs:range rdf:resource=&quot;#Gesture&quot;/&gt;
+    &lt;/owl:ObjectProperty&gt;
+    
+    &lt;owl:DatatypeProperty rdf:about=&quot;#has_gesture_time&quot;&gt;
+      &lt;rdfs:domain rdf:resource=&quot;#Gesture&quot;/&gt;
+      &lt;rdfs:range rdf:resource=&quot;http://www.w3.org/2001/XMLSchema#dateTime&quot;/&gt;
+    &lt;/owl:DatatypeProperty&gt;
+    
+    &lt;owl:DatatypeProperty rdf:about=&quot;#has_rule_time&quot;&gt;
+      &lt;rdfs:domain rdf:resource=&quot;#Rule&quot;/&gt;
+      &lt;rdfs:range rdf:resource=&quot;http://www.w3.org/2001/XMLSchema#dateTime&quot;/&gt;
+    &lt;/owl:DatatypeProperty&gt;
+    
+    &lt;owl:DatatypeProperty rdf:about=&quot;#has_gesture_name&quot;&gt;
+      &lt;rdfs:domain rdf:resource=&quot;#Gesture&quot;/&gt;
+      &lt;rdfs:range rdf:resource=&quot;http://www.w3.org/2001/XMLSchema#string&quot;/&gt;
+    &lt;/owl:DatatypeProperty&gt;
+    
+    &lt;owl:DatatypeProperty rdf:about=&quot;#has_gesture&quot;&gt;
+      &lt;rdfs:domain rdf:resource=&quot;#Rule&quot;/&gt;
+      &lt;rdfs:range rdf:resource=&quot;http://www.w3.org/2001/XMLSchema#string&quot;/&gt;
+    &lt;/owl:DatatypeProperty&gt;
+    
+    &lt;owl:Class rdf:about=&quot;#User&quot;&gt;
+      &lt;rdfs:subClassOf rdf:resource=&quot;http://www.w3.org/2002/07/owl#Thing&quot;/&gt;
+    &lt;/owl:Class&gt;
+    
+    &lt;owl:Class rdf:about=&quot;#Gesture&quot;&gt;
+      &lt;rdfs:subClassOf rdf:resource=&quot;http://www.w3.org/2002/07/owl#Thing&quot;/&gt;
+    &lt;/owl:Class&gt;
+    
+    &lt;owl:Class rdf:about=&quot;#Wave&quot;&gt;
+      &lt;rdfs:subClassOf rdf:resource=&quot;#Gesture&quot;/&gt;
+    &lt;/owl:Class&gt;
+    
+    &lt;owl:Class rdf:about=&quot;#Rule&quot;&gt;
+      &lt;rdfs:subClassOf rdf:resource=&quot;http://www.w3.org/2002/07/owl#Thing&quot;/&gt;
+    &lt;/owl:Class&gt;
+    
+    &lt;owl:Class rdf:about=&quot;#CloseCamera&quot;&gt;
+      &lt;rdfs:subClassOf rdf:resource=&quot;#Rule&quot;/&gt;
+    &lt;/owl:Class&gt;
+    
+  &lt;/rdf:RDF&gt;
+              
+            </code></pre>
+          </figure>
+        </p>
+        <p>
+          <figure typeof="schema:ImageObject">
+            <img src="img/rdf_schema.png" alt="RDF schema diagram" property="contentUrl" width="607" height="700">
+          </figure>
+        </p>
+      </section>
+      <section id="evolution">
+        <h3>Evolution of the model</h3>
+        <p>
+          The architecture of the initial proposed model has not changed much. In general, the focus was shifted from the data that would
+          form a gesture, to the gesture itself and what it causes . Following this idea, classes like Webcam or Data were removed and 
+          instances of the Gesture or Rule class were added.
+        </p>
+      </section>
+      <section id="evolution">
+        <h3>Use of concepts</h3>
+        <p>
+          The web application creates and registers Gesture objects from Webcam-captured video streams, with the time when it was created.
+          Gestured are continuosly interogated through SPARQL and based on the most frequent gestures in the last 10 seconds, if
+          a certain threshold is exceeded, Rules instances are created and binded to the gesture that caused it, for future references.
+        </p>
+      </section>
+    </section>
+    <section id="external">
+      <h2>External data sources</h2>
+      <p role="presentation">
+        For the process of extracting data and gestures from the video-streams we are using
+        an external model specialized in gesture control systens.
+      </p>
+      <section id="mediaPipe">
+        <h3>On-Device, Real-Time Hand Tracking with MediaPipe</h3>
+        <p property="schema:description">
+          MediaPipe Hands is a high-fidelity hand and finger tracking solution. 
+          It employs machine learning (ML) to infer 21 3D landmarks of a hand 
+          from just a single frame. Compared to other solutions, MediaPipe has good results on
+          both desktop environments and mobile devices, scaling also on multiple hands.
+        </p>
+        <p property="schema:description">
+          MediaPipe Hands utilizes an ML pipeline that consists of multiple models merged together:
+          A palm detector model that has the purpose to find a bounding box around the areas of interests, the hands;
+          a hand landmark detector model that receives as input the cropped image and return high-fidelity 3D hand keypoints.
+        </p>
+        <p>
+          <figure typeof="schema:ImageObject">
+            <img src="img/hand_crops.png" alt="Media Pipe hand crops with ground thruth annotation" property="contentUrl" width="607" height="400">
+          </figure>
+        </p>
+      </section>
+      <section id="owlReady2">
+        <h3>Owlready2</h3>
+        <p property="schema:description">
+          Owlready2 is a package for ontology-oriented programming for Python. It supports various operations on ontologies as Python objects.
+          Mainly we used it for automatically creating the schema though simple objects and for saving changes.
+        </p>
+        <p property="text">
+          <figure typeof="schema:SoftwareSourceCode" resource="#owlready2_code"
+                id="owlready2_code">
+            <pre><code>
+              
+              class Gesture(Thing): pass
+              class Wave(Gesture): pass
+
+              class Rule(Thing): pass
+              class CloseCamera(Rule): pass
+
+              class has_gesture_time(DataProperty):
+                domain = [Gesture]
+                range = [datetime.datetime]
+
+              class causes_rule(ObjectProperty):
+                domain = [Gesture]
+                range = [Rule]
+                inverse_property = is_caused_by
+            </code></pre>
+          </figure>
+        </p>
+      </section>
+      <section id="rdfLib">
+        <h3>RDFLib</h3>
+        <p property="schema:description">
+          RDFLib is a Python library for working with RDF. We used it for creating SPARQL queries.
+          </p property="text">
+            The following example of SPARQL counts all instances of class Gesture, or subclasses of it, that were
+            registered in a specific interval of time. 
+            <figure typeof="schema:SoftwareSourceCode" resource="#rdflib_code1"
+                    id="rdflib_code1">
+              <pre><code>
+                PREFIX gezr: <http://fiigezr.org/fiiGezr.owl#>
+                SELECT ?x ?name (count(distinct ?x) as ?count)
+                WHERE {
+                    ?x rdf:type/rdfs:subClassOf* gezr:Gesture .
+                    ?x gezr:has_gesture_time ?data .
+                    ?x gezr:has_gesture_name ?name .
+                    FILTER (?data &gt; ' 
+                    start_time.strftime("%Y-%m-%dT%H:%M:%S.%f") /
+                    '^^xsd:dateTime 
+                    && ?data &lt; ' /
+                    current_time.strftime("%Y-%m-%dT%H:%M:%S.%f") /
+                    '^^xsd:dateTime)
+                }
+                GROUP BY ?name
+                ORDER BY DESC(?count)
+              </code></pre>
+            </figure>
+          </p>
+          <p property="text">
+            In this example we form triples of form ?gesture ?causes_rule ?rule . These are added afterwards
+            in the owl graph.
+            <figure typeof="schema:SoftwareSourceCode" resource="#rdflib_code2"
+                  id="rdflib_code2">
+              <pre><code>
+                PREFIX gezr: <http://fiigezr.org/fiiGezr.owl#>
+                CONSTRUCT {
+                  ?x gezr:causes_rule ?r
+                }
+                WHERE {
+                  ?x rdf:type/rdfs:subClassOf* gezr:Gesture .
+                  ?r rdf:type/rdfs:subClassOf* gezr:Rule .
+                  ?x gezr:has_gesture_name ?name .
+                  ?r gezr:has_gesture ?name .
+                }
+              </code></pre>
+            </figure>
+          </p>
+        </p>
+      </section>
+      <section id="triviaAPI">
+        <h3>Trivia API</h3>
+        <p property="schema:description">
+          The Open Trivia API provides a free JSON API for generating questions with the following features: Category,
+          Difficulty, Type.
+          Inside the application it was used only for True / False questions. 
+        </p>
+      </section>
+    </section>
+    <section id="biblio-references">
+      <h2>References</h2>
+      <ol>
+        <li typeof="schema:WebPage" role="doc-biblioentry"
+            property="schema:citation" >
+          <cite property="schema:name">
+            <a href="https://dial.uclouvain.be/pr/boreal/object/boreal%3A215947/datastream/PDF_01/view">
+              An Ontology for Reasoning on Body-based Gestures
+            </a>
+          </cite>
+          by <span property="schema:author" typeof="schema:Person">
+            <span property="schema:givenName">Mehdi</span>
+            <span property="schema:familyName">Ousmer</span>
+          </span>,
+          <span property="schema:author" typeof="schema:Person">
+            <span property="schema:givenName">Jean</span>
+            <span property="schema:familyName">Vanderdonckt</span>
+          </span>,
+          <span property="schema:author" typeof="schema:Person">
+            <span property="schema:givenName">Sabin</span>
+            <span property="schema:familyName">Buraga</span>
+          </span>
+          </span>
+              (accessed on
+            <time property="schema:endTime" datatype="xsd:date"
+                  datetime="2020-11-28">28 Nov 2020</time>)
+          </span>.
+        </li>
+        <li typeof="schema:WebPage" role="doc-biblioentry"
+            property="schema:citation" >
+          <cite property="schema:name">
+            <a href="https://www.w3.org/TR/swbp-n-aryRelations/">
+              Defining N-ary Relations on the Semantic Web
+            </a>
+          </cite>
+          </span>; published in
+          <time property="schema:datePublished" datatype="xsd:date"
+                datetime="2006-03-12">12 Apr 2006</time>
+          <span property="schema:potentialAction" typeof="schema:ReadAction">
+            <meta property="schema:actionStatus" content="CompletedActionStatus">
+              (accessed on
+            <time property="schema:endTime" datatype="xsd:date"
+                  datetime="2020-11-28">28 Nov 2020</time>)
+          </span>.
+        </li>
+        <li typeof="schema:WebPage" role="doc-biblioentry"
+            resource="http://semver.org/"
+            property="schema:citation" >
+          <cite property="schema:name">
+            <a href="https://ai.googleblog.com/2019/08/on-device-real-time-hand-tracking-with.html">
+              On-Device, Real-Time Hand Tracking with MediaPipe
+            </a>
+          </cite>
+          </span>; published in
+          <time property="schema:datePublished" datatype="xsd:date"
+                datetime="2019-08-19">19 Aug 2019</time>
+          <span property="schema:potentialAction" typeof="schema:ReadAction">
+            <meta property="schema:actionStatus" content="CompletedActionStatus">
+              (accessed on
+            <time property="schema:endTime" datatype="xsd:date"
+                  datetime="2020-11-29">29 Nov 2020</time>)
+          </span>.
+        </li>
+        <li typeof="schema:WebPage" role="doc-biblioentry"
+            resource="http://semver.org/"
+            property="schema:citation" >
+          <cite property="schema:name">
+            <a href="https://venturebeat.com/2019/08/19/google-open-sources-gesture-tracking-ai-for-mobile-devices/">
+              Google open-sources gesture tracking AI for mobile devices
+            </a>
+          </cite>
+          </span>; published in
+          <time property="schema:datePublished" datatype="xsd:date"
+                datetime="2019-08-19">19 Aug 2019</time>
+          <span property="schema:potentialAction" typeof="schema:ReadAction">
+            <meta property="schema:actionStatus" content="CompletedActionStatus">
+              (accessed on
+            <time property="schema:endTime" datatype="xsd:date"
+                  datetime="2020-11-29">29 Nov 2020</time>)
+          </span>.
+        </li>
+        <li typeof="schema:WebPage" role="doc-biblioentry"
+            resource="http://semver.org/"
+            property="schema:citation" >
+          <cite property="schema:name">
+            <a href="https://google.github.io/mediapipe/solutions/hands.html">
+              MediaPipe Hands
+            </a>
+          </cite>,
+          published in
+          <time property="schema:datePublished" datatype="xsd:year"
+                datetime="2020">2020</time>
+          <span property="schema:potentialAction" typeof="schema:ReadAction">
+            <meta property="schema:actionStatus" content="CompletedActionStatus">
+              (accessed on
+            <time property="schema:endTime" datatype="xsd:date"
+                  datetime="2020-11-29">29 Nov 2020</time>)
+          </span>.
+        </li>
+
+        <li typeof="schema:WebPage" role="doc-biblioentry"
+            property="schema:citation" >
+          <cite property="schema:name">
+            <a href="https://opentdb.com/">
+              Open Trivia Database
+            </a>
+          </cite>
+          </span>; 
+          <span property="schema:potentialAction" typeof="schema:ReadAction">
+            <meta property="schema:actionStatus" content="CompletedActionStatus">
+              (accessed on
+            <time property="schema:endTime" datatype="xsd:date"
+                  datetime="2021-01-27">27 Jan 2021</time>)
+          </span>.
+        </li>
+
+        <li typeof="schema:WebPage" role="doc-biblioentry"
+            property="schema:citation" >
+          <cite property="schema:name">
+            <a href="https://owlready2.readthedocs.io/en/latest/index.html">
+              Welcome to Owlready2’s documentation!
+            </a>
+          </cite>
+          </span>; 
+          <span property="schema:potentialAction" typeof="schema:ReadAction">
+            <meta property="schema:actionStatus" content="CompletedActionStatus">
+              (accessed on
+            <time property="schema:endTime" datatype="xsd:date"
+                  datetime="2021-01-27">27 Jan 2021</time>)
+          </span>.
+        </li>
+
+        <li typeof="schema:WebPage" role="doc-biblioentry"
+            property="schema:citation" >
+          <cite property="schema:name">
+            <a href="https://rdflib.readthedocs.io/en/stable/">
+              rdflib 5.0.0
+            </a>
+          </cite>
+          </span>; 
+          <span property="schema:potentialAction" typeof="schema:ReadAction">
+            <meta property="schema:actionStatus" content="CompletedActionStatus">
+              (accessed on
+            <time property="schema:endTime" datatype="xsd:date"
+                  datetime="2021-01-27">27 Jan 2021</time>)
+          </span>.
+        </li>
+      </ol>
+    </section>
+  </body>
+</html>
