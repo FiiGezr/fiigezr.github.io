@@ -1,3 +1,7 @@
+* {
+    font-family: Monospace;
+}
+
 .progress-tile {
     background-color: #FAFAD2;
     margin: 1%;
