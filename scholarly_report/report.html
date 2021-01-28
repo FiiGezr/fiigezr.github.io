@@ -41,7 +41,7 @@
         Gezr is a web application that has the purpose of creating a small structure out of Webcam-captured video-streams,
         by detecting, classifying and comparing hand/arm gestures of users, providing also information about rules resulted
         from the input gesture. For this analysis, the data will be modeled using a Resource Description Framework (RDF) schema.
-        Simple users will conect to the application with camera on and they could see, by request, gestures data resulted until that point and,
+        Simple users will connect to the application with camera on and they could see, by request, gestures data resulted until that point and,
         eventually, they can start a quiz game.
       </p>
     </section>
@@ -50,7 +50,7 @@
       <p property="text">
         This report focuses on presenting the considerations about the 
         internal data structures/models to be used and the external APIs managed by
-        the application. It starts by describing the main used classes, presentented
+        the application. It starts by describing the main used classes, presented
         through a RDF Data Management, and the graphical
         representation of how these interact within the application. This is followed
         by a description of external libraries and models used in the process of gesture
@@ -75,8 +75,8 @@
           <li>Gesture: resulted gestures after detecting, analysing and classifying video-streams. </li>
           <li>Rule: defined actions to be considered after analysing a Gesture. </li>
         </ul>
-        Since MediaPipe was used for extracting metadata about the analysed hand, other strutures were created for handling such data.
-        In the end we didn't used this in out application, but is still kept as art of the ontology. The main classes are:
+        Since MediaPipe was used for extracting metadata about the analysed hand, other structures were created for handling such data.
+        In the end we didn't used this in our application, but is still kept as part of the ontology. The main classes are:
         <ul>
           <li>Hand: the base class.</li>
           <li>Finger: superclass for IndexFinger, MiddleFinger, RingFinger, PinkyFinger, Thumb. </li>
@@ -184,8 +184,8 @@
         <h3>Use of concepts</h3>
         <p>
           The web application creates and registers Gesture objects from Webcam-captured video streams, with the time when it was created.
-          Gestured are continuosly interogated through SPARQL and based on the most frequent gestures in the last 10 seconds, if
-          a certain threshold is exceeded, Rules instances are created and binded to the gesture that caused it, for future references.
+          Gestured are continuously interrogated through SPARQL and based on the most frequent gestures in the last 10 seconds, if
+          a certain threshold is exceeded, Rules instances are created and bound to the gesture that caused it, for future references.
         </p>
       </section>
     </section>
@@ -193,7 +193,7 @@
       <h2>External data sources</h2>
       <p role="presentation">
         For the process of extracting data and gestures from the video-streams we are using
-        an external model specialized in gesture control systens.
+        an external model specialized in gesture control systems.
       </p>
       <section id="mediaPipe">
         <h3>On-Device, Real-Time Hand Tracking with MediaPipe</h3>
